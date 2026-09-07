@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Outfit } from "next/font/google";
+import { Fredoka, Inter, Outfit } from "next/font/google";
 import { business, seo } from "@/content/site";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
@@ -18,6 +18,15 @@ const inter = Inter({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-inter",
+});
+
+// Rounded geometric face used only for the logo lockup, to match the
+// letterforms of the Windii Tech wordmark.
+const fredoka = Fredoka({
+  subsets: ["latin"],
+  weight: ["500", "600"],
+  display: "swap",
+  variable: "--font-logo",
 });
 
 export const metadata: Metadata = {
@@ -77,7 +86,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${outfit.variable} ${inter.variable}`}
+      className={`${outfit.variable} ${inter.variable} ${fredoka.variable}`}
     >
       <head>
         <ThemeScript />

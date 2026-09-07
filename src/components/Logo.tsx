@@ -1,11 +1,21 @@
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 /**
- * The flowing wave that forms the "W" of the Windii Tech logo, drawn as a
- * stroked path so it inherits the current text colour.
- *
- * TODO(windii): replace with the official vector artwork when you have the
- * source file — this is a faithful reconstruction, not the original asset.
+ * ---------------------------------------------------------------------------
+ * Using the official logo artwork
+ * ---------------------------------------------------------------------------
+ * Drop the real file in as `public/logo-official.svg` (or .png) and set
+ * USE_OFFICIAL_ARTWORK to true. Everything below it is a hand-drawn
+ * reconstruction and should be retired the moment the real file exists.
+ */
+const USE_OFFICIAL_ARTWORK = false;
+const OFFICIAL_ARTWORK_SRC = "/logo-official.svg";
+
+/**
+ * The flowing wave that forms the "W" of the Windii Tech wordmark, drawn as a
+ * stroked path so it inherits the current colour. Used on its own as the app
+ * icon and as the first letter of the wordmark below.
  */
 export function LogoMark({ className }: { className?: string }) {
   return (
@@ -28,32 +38,67 @@ export function LogoMark({ className }: { className?: string }) {
 }
 
 /**
- * Full lockup: wave mark plus the registered company name.
+ * The "Windii Tech" lockup: the wave W leading into "indii", with "Tech" set
+ * beneath it and the registered mark raised after the wordmark.
  *
- * `collapseOnMobile` drops "Technologies" below 360px so the header stays on
- * one line on the narrowest phones. The full registered name still appears in
- * the footer and page content on every page.
+ * The whole lockup scales from its own font-size, so callers size it with a
+ * single text-* class.
+ *
+ * Colour note: the source artwork is bright green on black. On a light
+ * background that green fails contrast requirements, so the lockup uses the
+ * theme accent — a darker green in light mode, the bright brand green in dark
+ * mode — which keeps it readable in both themes.
  */
 export function Logo({
   className,
   collapseOnMobile = false,
 }: {
   className?: string;
+  /** Hides the "Tech" line below 360px so the header stays compact. */
   collapseOnMobile?: boolean;
 }) {
+  if (USE_OFFICIAL_ARTWORK) {
+    return (
+      <Image
+        src={OFFICIAL_ARTWORK_SRC}
+        alt="Windii Technologies"
+        width={180}
+        height={48}
+        priority
+        className={cn("h-10 w-auto", className)}
+      />
+    );
+  }
+
   return (
-    <span className={cn("inline-flex items-center gap-2.5", className)}>
-      <LogoMark className="h-7 w-7 shrink-0 text-accent" />
-      <span className="whitespace-nowrap font-[family-name:var(--font-display)] text-base font-semibold tracking-tight text-fg sm:text-lg">
-        Windii{" "}
-        <span
-          className={cn(
-            "font-normal text-fg-muted",
-            collapseOnMobile && "hidden min-[360px]:inline",
-          )}
-        >
-          Technologies
+    <span
+      className={cn(
+        "inline-flex flex-col leading-none text-accent",
+        "font-[family-name:var(--font-logo)]",
+        className,
+      )}
+    >
+      <span className="inline-flex items-end">
+        {/* The wave W rises above the x-height, as it does in the artwork. */}
+        <LogoMark
+          className="-mb-[0.09em] h-[1.16em] w-[1.16em] shrink-0"
+          aria-hidden="true"
+        />
+        <span className="-ml-[0.1em] text-[1em] font-semibold leading-[1.05] tracking-[-0.005em]">
+          indii
         </span>
+        {/* Raised to the top right, as in the artwork. */}
+        <span className="ml-[0.08em] self-start pt-[0.06em] text-[0.3em] font-medium leading-none">
+          ®
+        </span>
+      </span>
+      <span
+        className={cn(
+          "ml-[1.55em] mt-[0.1em] text-[0.62em] font-medium tracking-[0.005em]",
+          collapseOnMobile && "hidden min-[360px]:inline",
+        )}
+      >
+        Tech
       </span>
     </span>
   );

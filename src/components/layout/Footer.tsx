@@ -18,7 +18,7 @@ export function Footer() {
       <Container>
         <div className="grid gap-12 py-16 lg:grid-cols-[1.6fr_1fr_1fr_1.3fr] lg:gap-8">
           <div className="max-w-sm">
-            <Logo />
+            <Logo className="text-[30px]" />
             <p className="mt-5 text-sm leading-relaxed text-fg-muted">
               {footer.tagline}
             </p>

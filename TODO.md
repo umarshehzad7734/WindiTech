@@ -115,24 +115,34 @@ either page. It currently reads `"4 September 2026"`.
 
 ---
 
-## 4. Brand assets
+## 4. Brand assets — send me the real logo file
 
 **Files:** `public/logo.svg`, `public/icon.svg`, `public/icon-192.png`,
 `public/icon-512.png`, `public/apple-touch-icon.png`, `public/favicon-32.png`,
-and the inline `LogoMark` in `src/components/Logo.tsx`
+and `src/components/Logo.tsx`
 
-The logo was supplied as a raster image only, so the wave mark was **rebuilt as
-a vector** to match. It is a faithful reconstruction in the brand colour
-(`#00E58C`), not the original artwork.
+The logo has only ever been shared as an image pasted into chat, which cannot be
+saved to disk. Everything on the site is therefore a **hand-drawn
+reconstruction** of the Windii Tech wordmark — the wave "W", "indii", the "Tech"
+line and the registered mark, set in a rounded geometric typeface (Fredoka) in
+the brand green `#00E58C`. It is close, but it is not your artwork.
 
-Replace all of the above with the official files when you have the vector
-source. The PNG sizes needed are 192, 512, 180 (Apple touch icon) and 32; they
-can be generated from `public/icon.svg` with any SVG-to-PNG tool.
+**To use the real thing:**
 
-If the official green differs from `#00E58C`, update `--color-brand-*` in
-`src/app/globals.css` — the whole palette is derived from that ramp.
+1. Save the official logo into `public/` as `logo-official.svg` (preferred) or
+   `logo-official.png`.
+2. In `src/components/Logo.tsx`, set `USE_OFFICIAL_ARTWORK = true` (and adjust
+   `OFFICIAL_ARTWORK_SRC` if you used .png).
+3. Commit and push. The site then uses your file everywhere the logo appears.
 
----
+Also regenerate the icon set from the real artwork: 192, 512, 180 (Apple touch
+icon) and 32 pixels, replacing the files listed above.
+
+**Colour note:** the artwork is bright green on black. That green fails contrast
+requirements on a white background, so the site renders the lockup in the theme
+accent — a darker green in light mode, the exact brand green in dark mode. If
+you would rather have the exact green everywhere, say so; it is a one-line
+change, but light-mode legibility will suffer.
 
 ## 5. Deliberately not included
 
