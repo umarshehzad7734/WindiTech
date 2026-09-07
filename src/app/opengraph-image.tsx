@@ -4,6 +4,8 @@ import { business, home } from "@/content/site";
 export const alt = `${business.name} — ${business.sector}`;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
+// Required so the image is generated at build time under `output: "export"`.
+export const dynamic = "force-static";
 
 const markSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="140" height="140"><path d="M3 10.5C6.5 23 11 23 13.8 13.5c1.4-4.7 3-4.7 4.4 0C21 23 25.5 23 29 10.5" fill="none" stroke="#00E58C" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 

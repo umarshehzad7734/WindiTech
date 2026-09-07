@@ -21,8 +21,7 @@ lucide-react.
 - [Configuring the contact form email](#configuring-the-contact-form-email)
 - [Project structure](#project-structure)
 - [Deploying to Vercel](#deploying-to-vercel)
-- [Deploying to cPanel / shared hosting](#deploying-to-cpanel--shared-hosting)
-- [Static export path](#static-export-path)
+- [Deploying to cPanel / shared hosting (GoDaddy)](#deploying-to-cpanel--shared-hosting-godaddy)
 - [Brand assets](#brand-assets)
 - [Accessibility and performance](#accessibility-and-performance)
 - [Before you go live](#before-you-go-live)
@@ -44,7 +43,8 @@ Other scripts:
 | Command | What it does |
 |---|---|
 | `npm run dev` | Development server with hot reload |
-| `npm run build` | Production build |
+| `npm run build` | Production build (Node/Vercel — `/api/contact` works) |
+| `npm run build:static` | Static export to `out/` for Apache/cPanel — see [`DEPLOY-CPANEL.md`](./DEPLOY-CPANEL.md) |
 | `npm run start` | Serve the production build (run `build` first) |
 | `npm run lint` | ESLint |
 | `npm run typecheck` | TypeScript, no emit |
@@ -130,6 +130,7 @@ settings for production.
 | `CONTACT_TO_EMAIL` | No | Where enquiries go. Defaults to `info@windiitechnologies.com`. |
 | `CONTACT_FROM_EMAIL` | No | The From address. Must be on an authorised sending domain. |
 | `NEXT_PUBLIC_SITE_URL` | No | Overrides the canonical origin. **Preview deployments only** — leave unset in production. |
+| `NEXT_PUBLIC_CONTACT_ENDPOINT` | No | Where the form posts. Defaults to `/api/contact`; `build:static` sets it to `/contact.php`. |
 
 ---
 
@@ -258,91 +259,39 @@ wrong theme.
 
 ---
 
-## Deploying to cPanel / shared hosting
+## Deploying to cPanel / shared hosting (GoDaddy)
 
-This works if your host offers **Node.js hosting** (usually "Setup Node.js App",
-powered by Passenger). If it does not, use the
-[static export path](#static-export-path) below instead.
+The site can be exported to plain HTML and served by any Apache host — no Node.js
+on the server. The contact form is handled by a single PHP file.
 
-1. Build locally:
+```bash
+npm run build:static
+```
 
-   ```bash
-   npm ci
-   npm run build
-   ```
+That produces `out/`, containing the whole site plus `contact.php`,
+`contact-config.example.php` and `.htaccess`. Upload the contents of `out/` to
+`public_html`.
 
-2. Upload to the server (e.g. `~/windii-site`), excluding `node_modules`,
-   `.git` and `.env.local`:
+**Full walkthrough, including what to do about the existing WordPress install at
+the domain root: [`DEPLOY-CPANEL.md`](./DEPLOY-CPANEL.md).**
 
-   ```
-   .next/  public/  package.json  package-lock.json  next.config.ts
-   ```
+How it works:
 
-3. In cPanel → **Setup Node.js App**:
-   - Node version: 20 or newer
-   - Application root: `windii-site`
-   - Application URL: your domain
-   - Application startup file: `node_modules/next/dist/bin/next`
-   - Add the environment variables from `.env.example` (use the SMTP option —
-     shared hosts almost always provide a mailbox rather than an HTTP API).
-4. Click **Run NPM Install**, then set the start command to `next start`.
-   If the interface will not accept that, add a `server.js` in the app root:
+- `next.config.ts` switches to `output: "export"` only when `STATIC_EXPORT=true`,
+  so the normal Node build and `/api/contact` are unaffected.
+- `scripts/build-static.mjs` moves `src/app/api` aside for the build (a static
+  export cannot contain route handlers), restores it afterwards, and copies the
+  files from `php/` into `out/`.
+- The form's endpoint comes from `NEXT_PUBLIC_CONTACT_ENDPOINT`, which the
+  static build sets to `/contact.php`. It defaults to `/api/contact` otherwise.
+- `php/contact.php` mirrors the Node API exactly: the same validation rules,
+  honeypot handling, rate limit and JSON responses.
 
-   ```js
-   const { createServer } = require("http");
-   const next = require("next");
-
-   const app = next({ dev: false });
-   const handle = app.getRequestHandler();
-
-   app.prepare().then(() => {
-     createServer((req, res) => handle(req, res)).listen(
-       process.env.PORT || 3000,
-     );
-   });
-   ```
-
-   and set that as the startup file.
-5. Restart the application, then check the domain, `/contact` (submit a real
-   test enquiry) and `/sitemap.xml`.
-
-Make sure the host serves the site over HTTPS — enable AutoSSL / Let's Encrypt
-in cPanel and force an HTTPS redirect.
+Both targets were verified against a real Apache 2.4 server and a real PHP 8.4
+server — see the last section of `DEPLOY-CPANEL.md` for what was tested.
 
 ---
 
-## Static export path
-
-If your host only serves static files, or you would rather not run Node at all,
-you can export the site as plain HTML — but the contact form needs a
-third-party endpoint, because there is no server to run `/api/contact`.
-
-1. Sign up for a form endpoint service (Formspree, Web3Forms, Getform or
-   similar) and get your endpoint URL.
-2. In `src/components/contact/ContactForm.tsx`, change the `fetch` target from
-   `/api/contact` to that URL. Keep the client-side zod validation, the honeypot
-   field and the loading/success/error states exactly as they are — only the URL
-   changes.
-3. Delete `src/app/api/` (a static export cannot contain route handlers).
-4. Add to `next.config.ts`:
-
-   ```ts
-   const nextConfig: NextConfig = {
-     output: "export",
-     images: { unoptimized: true },
-     // `headers()` does not apply to a static export — set these on the web
-     // server instead (e.g. in .htaccess).
-   };
-   ```
-
-5. Run `npm run build`. The site is written to `out/`. Upload the **contents**
-   of `out/` to `public_html/`.
-
-Note that with `output: "export"` the security headers in `next.config.ts` stop
-being applied, since there is no Node server; add the equivalents to your
-`.htaccess`.
-
----
 
 ## Brand assets
 

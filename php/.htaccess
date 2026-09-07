@@ -1,0 +1,88 @@
+# Windii Technologies — Apache configuration for the static export.
+# Upload this to public_html alongside the exported site.
+
+# ---------------------------------------------------------------------------
+# Protect the mail configuration. It holds credentials and must never be
+# downloadable, even if PHP is ever disabled on this host.
+# ---------------------------------------------------------------------------
+<FilesMatch "^contact-config(\.example)?\.php$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+# Never serve dotfiles.
+<FilesMatch "^\.">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+</FilesMatch>
+
+Options -Indexes
+
+# The export contains BOTH about.html and an about/ directory (the latter holds
+# Next.js navigation payloads and has no index file). Without DirectorySlash Off,
+# Apache would redirect /about to /about/, find no index, and return 403 for
+# every page on the site.
+<IfModule mod_dir.c>
+    DirectorySlash Off
+    DirectoryIndex index.html
+</IfModule>
+
+# ---------------------------------------------------------------------------
+# Clean URLs: serve /about from about.html, so the address bar matches the
+# canonical URLs in the page metadata (no .html, no trailing slash).
+# ---------------------------------------------------------------------------
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Force HTTPS.
+    RewriteCond %{HTTPS} !=on
+    RewriteCond %{HTTP:X-Forwarded-Proto} !=https
+    RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
+
+    # Strip a trailing slash (except the site root) to keep one canonical form.
+    RewriteRule ^(.+?)/$ /$1 [R=301,L]
+
+    # Serve /about from about.html. Deliberately does NOT skip real directories,
+    # because about/ exists alongside about.html — the .html check below is what
+    # decides.
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{DOCUMENT_ROOT}/$1.html -f
+    RewriteRule ^(.+?)/?$ /$1.html [L]
+</IfModule>
+
+ErrorDocument 404 /404.html
+
+# ---------------------------------------------------------------------------
+# Security headers — the equivalents of next.config.ts headers(), which does
+# not apply to a static export.
+# ---------------------------------------------------------------------------
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+
+    # Next.js fingerprints filenames under /_next/static, so they can be
+    # cached indefinitely.
+    <FilesMatch "\.(js|css|woff2|svg|png|jpg|jpeg|webp|avif|ico)$">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </FilesMatch>
+    <FilesMatch "\.(html|json|xml|txt|webmanifest)$">
+        Header set Cache-Control "public, max-age=0, must-revalidate"
+    </FilesMatch>
+</IfModule>
+
+# ---------------------------------------------------------------------------
+# Compression
+# ---------------------------------------------------------------------------
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml
+    AddOutputFilterByType DEFLATE application/javascript application/json
+    AddOutputFilterByType DEFLATE image/svg+xml application/manifest+json
+</IfModule>

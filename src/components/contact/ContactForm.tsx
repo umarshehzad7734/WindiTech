@@ -13,6 +13,12 @@ import { cn } from "@/lib/utils";
 
 type Status = "idle" | "submitting" | "success" | "error";
 
+/**
+ * Where the form posts. Defaults to the Next.js route handler; the static
+ * export sets this to "/contact.php" so the same form works on Apache hosting.
+ */
+const ENDPOINT = process.env.NEXT_PUBLIC_CONTACT_ENDPOINT || "/api/contact";
+
 type FormValues = {
   name: string;
   email: string;
@@ -78,7 +84,7 @@ export function ContactForm() {
     setFormMessage("");
 
     try {
-      const response = await fetch("/api/contact", {
+      const response = await fetch(ENDPOINT, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(parsed.data),
