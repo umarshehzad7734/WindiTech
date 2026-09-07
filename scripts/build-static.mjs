@@ -11,8 +11,11 @@
  */
 import { spawnSync } from "node:child_process";
 import { cpSync, existsSync, mkdirSync, readdirSync, renameSync, rmSync } from "node:fs";
+import { createRequire } from "node:module";
 import path from "node:path";
 import process from "node:process";
+
+const require = createRequire(import.meta.url);
 
 const root = process.cwd();
 const apiDir = path.join(root, "src", "app", "api");
@@ -47,15 +50,21 @@ try {
     console.log("• Moved src/app/api aside for the static build");
   }
 
-  const result = spawnSync("npx", ["next", "build"], {
-    stdio: "inherit",
-    env: {
-      ...process.env,
-      STATIC_EXPORT: "true",
-      NEXT_PUBLIC_CONTACT_ENDPOINT: "/contact.php",
+  // Run Next's CLI directly with this Node binary rather than going through a
+  // shell. Using shell:true with an argument array triggers Node's DEP0190
+  // deprecation warning, and this form behaves identically on Windows and Unix.
+  const result = spawnSync(
+    process.execPath,
+    [require.resolve("next/dist/bin/next"), "build"],
+    {
+      stdio: "inherit",
+      env: {
+        ...process.env,
+        STATIC_EXPORT: "true",
+        NEXT_PUBLIC_CONTACT_ENDPOINT: "/contact.php",
+      },
     },
-    shell: process.platform === "win32",
-  });
+  );
 
   if (result.status !== 0) {
     throw new Error(`next build failed with exit code ${result.status}`);
