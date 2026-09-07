@@ -115,34 +115,28 @@ either page. It currently reads `"4 September 2026"`.
 
 ---
 
-## 4. Brand assets — send me the real logo file
+## 4. Brand assets — done
 
-**Files:** `public/logo.svg`, `public/icon.svg`, `public/icon-192.png`,
-`public/icon-512.png`, `public/apple-touch-icon.png`, `public/favicon-32.png`,
-and `src/components/Logo.tsx`
+The official artwork was supplied as `WIndii_Logo_New.pdf` and is now used
+throughout the site. It was extracted from the PDF's embedded image (709x452,
+flat brand green over black) by dividing out the black ground rather than
+keying it, which preserves the original anti-aliasing exactly.
 
-The logo has only ever been shared as an image pasted into chat, which cannot be
-saved to disk. Everything on the site is therefore a **hand-drawn
-reconstruction** of the Windii Tech wordmark — the wave "W", "indii", the "Tech"
-line and the registered mark, set in a rounded geometric typeface (Fredoka) in
-the brand green `#00E58C`. It is close, but it is not your artwork.
+| File | What it is |
+|---|---|
+| `public/logo-official.png` | The lockup on transparency, 641x257 |
+| `public/logo-official@2x.png` | Same, upscaled for high-DPI use |
+| `public/icon-512.png`, `icon-192.png`, `apple-touch-icon.png`, `favicon-32.png` | The wave "W" from the artwork on the brand-dark plate |
 
-**To use the real thing:**
+The exact brand green is **`#00E38C`**, sampled from the artwork itself, and is
+now `--color-brand-400` in `src/app/globals.css`.
 
-1. Save the official logo into `public/` as `logo-official.svg` (preferred) or
-   `logo-official.png`.
-2. In `src/components/Logo.tsx`, set `USE_OFFICIAL_ARTWORK = true` (and adjust
-   `OFFICIAL_ARTWORK_SRC` if you used .png).
-3. Commit and push. The site then uses your file everywhere the logo appears.
-
-Also regenerate the icon set from the real artwork: 192, 512, 180 (Apple touch
-icon) and 32 pixels, replacing the files listed above.
-
-**Colour note:** the artwork is bright green on black. That green fails contrast
-requirements on a white background, so the site renders the lockup in the theme
-accent — a darker green in light mode, the exact brand green in dark mode. If
-you would rather have the exact green everywhere, say so; it is a one-line
-change, but light-mode legibility will suffer.
+**One limitation worth knowing:** the logo inside that PDF is a bitmap, not
+vector art. At the sizes the site uses it (about 40px tall in the header) it is
+far more resolution than needed, so it looks sharp. If you ever need it very
+large — a banner, print, a billboard — ask your designer for the original
+vector file (`.ai`, `.eps` or `.svg`) and drop it in as `public/logo-official.svg`,
+then update `LOGO_SRC` in `src/components/Logo.tsx`.
 
 ## 5. Deliberately not included
 
@@ -178,6 +172,6 @@ the real details and it can be added.
 - [ ] Product name and positioning confirmed (§2.2)
 - [ ] Map coordinates confirmed (§2.3)
 - [ ] Privacy Policy and Terms reviewed by a lawyer (§3)
-- [ ] Official logo files dropped in (§4)
+- [x] Official logo artwork in place (§4)
 - [ ] Site live at `https://windiitechnologies.com` over HTTPS
 - [ ] `sitemap.xml` and `robots.txt` resolve; sitemap submitted to Google Search Console

@@ -1,3 +1,5 @@
+import { readFile } from "node:fs/promises";
+import path from "node:path";
 import { ImageResponse } from "next/og";
 import { business, home } from "@/content/site";
 
@@ -7,10 +9,12 @@ export const contentType = "image/png";
 // Required so the image is generated at build time under `output: "export"`.
 export const dynamic = "force-static";
 
-const markSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="140" height="140"><path d="M3 10.5C6.5 23 11 23 13.8 13.5c1.4-4.7 3-4.7 4.4 0C21 23 25.5 23 29 10.5" fill="none" stroke="#00E58C" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
-
-export default function OpengraphImage() {
-  const mark = `data:image/svg+xml;base64,${Buffer.from(markSvg).toString("base64")}`;
+export default async function OpengraphImage() {
+  // The official lockup, inlined so satori can rasterise it.
+  const logo = await readFile(
+    path.join(process.cwd(), "public", "logo-official.png"),
+  );
+  const mark = `data:image/png;base64,${logo.toString("base64")}`;
 
   return new ImageResponse(
     (
@@ -25,12 +29,12 @@ export default function OpengraphImage() {
           // Satori has no blur filter, so the glow is a gradient rather than a
           // blurred shape.
           backgroundImage:
-            "radial-gradient(circle at 78% -10%, rgba(0,229,140,0.22), rgba(6,8,9,0) 55%)",
+            "radial-gradient(circle at 78% -10%, rgba(0,227,140,0.22), rgba(6,8,9,0) 55%)",
           padding: "72px 80px",
         }}
       >
         <div style={{ display: "flex", flexDirection: "column" }}>
-          <img src={mark} width={140} height={140} alt="" />
+          <img src={mark} width={340} height={136} alt="" />
           <div
             style={{
               display: "flex",
@@ -68,7 +72,7 @@ export default function OpengraphImage() {
           }}
         >
           <div style={{ display: "flex" }}>{business.address.full}</div>
-          <div style={{ display: "flex", color: "#00E58C" }}>
+          <div style={{ display: "flex", color: "#00E38C" }}>
             {business.domain}
           </div>
         </div>

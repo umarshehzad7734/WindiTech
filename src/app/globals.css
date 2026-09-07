@@ -8,12 +8,13 @@
    Brand colour is derived from the Windii Tech logo (spring green on black).
    --------------------------------------------------------------------------- */
 @theme {
-  /* Brand ramp — brand-400 (#00E58C) is the logo green. */
+  /* Brand ramp — brand-400 (#00E38C) is the exact green sampled from the
+     official logo artwork. */
   --color-brand-50: #ebfdf5;
   --color-brand-100: #cffae8;
   --color-brand-200: #9bf5d0;
   --color-brand-300: #4fefb5;
-  --color-brand-400: #00e58c;
+  --color-brand-400: #00e38c;
   --color-brand-500: #00c077;
   --color-brand-600: #009b61;
   --color-brand-700: #007a4e;
@@ -116,7 +117,7 @@
   --accent: var(--color-brand-400);
   --accent-hover: var(--color-brand-300);
   --accent-contrast: #04160f;
-  --accent-soft: rgba(0, 229, 140, 0.12);
+  --accent-soft: rgba(0, 227, 140, 0.12);
 }
 
 /* ---------------------------------------------------------------------------

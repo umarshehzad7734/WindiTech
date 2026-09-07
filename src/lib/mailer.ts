@@ -59,7 +59,7 @@ function buildMessage(input: ContactInput) {
 <html lang="en"><body style="margin:0;background:#f4f7f8;padding:24px;font-family:-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#0b0f12">
   <div style="max-width:600px;margin:0 auto;background:#ffffff;border:1px solid #cfd8de;border-radius:12px;overflow:hidden">
     <div style="background:#060809;padding:20px 24px">
-      <p style="margin:0;color:#00e58c;font-size:13px;letter-spacing:.14em;text-transform:uppercase;font-weight:600">New website enquiry</p>
+      <p style="margin:0;color:#00e38c;font-size:13px;letter-spacing:.14em;text-transform:uppercase;font-weight:600">New website enquiry</p>
       <p style="margin:6px 0 0;color:#ffffff;font-size:18px;font-weight:600">${escapeHtml(business.name)}</p>
     </div>
     <table style="width:100%;border-collapse:collapse;font-size:14px">

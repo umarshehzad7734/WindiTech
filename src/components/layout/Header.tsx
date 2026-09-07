@@ -65,13 +65,13 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 border-b border-line bg-canvas/85 backdrop-blur-md">
       <Container>
-        <div className="flex h-[72px] items-center justify-between gap-4 sm:h-20">
+        <div className="flex h-16 items-center justify-between gap-4 sm:h-18">
           <Link
             href="/"
             className="rounded-md"
             aria-label={`${business.name} — home`}
           >
-            <Logo collapseOnMobile className="text-[23px] sm:text-[26px]" />
+            <Logo priority className="h-9 sm:h-10" />
           </Link>
 
           <nav aria-label="Main" className="hidden lg:block">
@@ -148,7 +148,7 @@ export function Header() {
               className="absolute inset-y-0 right-0 flex w-[min(20rem,85vw)] flex-col border-l border-line bg-canvas p-6 shadow-2xl"
             >
               <div className="flex items-center justify-between">
-                <Logo className="text-[26px]" />
+                <Logo className="h-9" />
                 <button
                   type="button"
                   onClick={() => {
