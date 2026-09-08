@@ -105,7 +105,7 @@ export default function ProductsPage() {
         <Reveal className="mt-12">
           <ButtonLink href={products.flagship.cta.href} size="lg">
             {products.flagship.cta.label}
-            <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            <ArrowRight className="h-4 w-4 transition-transform duration-[--dur-base] ease-[--ease-out-soft] group-hover/btn:translate-x-0.5" aria-hidden="true" />
           </ButtonLink>
         </Reveal>
       </Section>
@@ -121,7 +121,7 @@ export default function ProductsPage() {
           <div className="mt-8">
             <ButtonLink href={products.custom.cta.href} variant="secondary">
               {products.custom.cta.label}
-              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              <ArrowRight className="h-4 w-4 transition-transform duration-[--dur-base] ease-[--ease-out-soft] group-hover/btn:translate-x-0.5" aria-hidden="true" />
             </ButtonLink>
           </div>
         </Reveal>

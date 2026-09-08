@@ -1,23 +1,41 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion, type Variants } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 /**
- * Fade + slide-up on scroll into view. Falls back to a plain element when the
- * visitor has asked for reduced motion.
+ * Scroll entrances for the site.
+ *
+ * Deliberately restrained: a short rise and a fade, once, on the same timing
+ * everywhere. No scaling, rotation, blur or spring — those read as a template.
+ * Everything falls back to a plain element when the visitor has asked for
+ * reduced motion.
  */
+
+const DISTANCE = 14;
+const DURATION = 0.55;
+const EASE = [0.16, 1, 0.3, 1] as const;
+
+const variants: Variants = {
+  hidden: { opacity: 0, y: DISTANCE },
+  visible: { opacity: 1, y: 0 },
+};
+
+type Tag = "div" | "li" | "section" | "ul" | "ol";
+
+type RevealProps = {
+  as?: Tag;
+  delay?: number;
+  className?: string;
+  children: React.ReactNode;
+};
+
 export function Reveal({
   as = "div",
   delay = 0,
   className,
   children,
-}: {
-  as?: "div" | "li" | "section";
-  delay?: number;
-  className?: string;
-  children: React.ReactNode;
-}) {
+}: RevealProps) {
   const reduceMotion = useReducedMotion();
   const MotionTag = motion[as];
 
@@ -32,10 +50,70 @@ export function Reveal({
       // forces it visible when the animation can never run.
       data-reveal=""
       className={cn(className)}
-      initial={{ opacity: 0, y: 16 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial="hidden"
+      whileInView="visible"
       viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: 0.5, delay, ease: [0.16, 1, 0.3, 1] }}
+      variants={variants}
+      transition={{ duration: DURATION, delay, ease: EASE }}
+    >
+      {children}
+    </MotionTag>
+  );
+}
+
+/**
+ * Wraps a group so its children enter one after another. Use for card grids
+ * and lists — the offset is small enough to read as a single movement rather
+ * than a sequence of separate animations.
+ */
+export function RevealGroup({
+  as = "div",
+  stagger = 0.07,
+  delay = 0,
+  className,
+  children,
+}: RevealProps & { stagger?: number }) {
+  const reduceMotion = useReducedMotion();
+  const MotionTag = motion[as];
+
+  if (reduceMotion) {
+    const Tag = as;
+    return <Tag className={className}>{children}</Tag>;
+  }
+
+  return (
+    <MotionTag
+      className={cn(className)}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, margin: "-60px" }}
+      transition={{ staggerChildren: stagger, delayChildren: delay }}
+    >
+      {children}
+    </MotionTag>
+  );
+}
+
+/** A single child of RevealGroup. Inherits the group's stagger timing. */
+export function RevealItem({
+  as = "div",
+  className,
+  children,
+}: Omit<RevealProps, "delay">) {
+  const reduceMotion = useReducedMotion();
+  const MotionTag = motion[as];
+
+  if (reduceMotion) {
+    const Tag = as;
+    return <Tag className={className}>{children}</Tag>;
+  }
+
+  return (
+    <MotionTag
+      data-reveal=""
+      className={cn(className)}
+      variants={variants}
+      transition={{ duration: DURATION, ease: EASE }}
     >
       {children}
     </MotionTag>

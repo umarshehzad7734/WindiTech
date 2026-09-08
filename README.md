@@ -230,15 +230,27 @@ sent to the browser small.
 ### Design system
 
 Colour, typography, spacing and motion tokens are defined in
-`src/app/globals.css` under `@theme`. The brand green (`#00E58C`, the logo
-colour) is `brand-400`, with a full 50–950 ramp around it. Semantic tokens
-(`canvas`, `surface`, `fg`, `accent`, `line`, …) are re-pointed for dark mode,
-so components never hardcode a colour.
+`src/app/globals.css` under `@theme`. Semantic tokens (`canvas`, `surface`,
+`fg`, `accent`, `line`, …) are re-pointed per theme, so components never
+hardcode a colour — the entire palette can be changed from that one file.
 
-Light and dark themes are supported, defaulting to the visitor's system
-preference. The choice is stored in `localStorage` under `windii-theme` and
-applied before first paint by an inline script, so there is no flash of the
-wrong theme.
+**Colour.** The brand is green on black, and the site follows that: black
+carries the page, with layered near-blacks (`#000000` canvas, `#080a0b` bands,
+`#0e1112` cards) providing depth, and the logo green (`#00E38C`, `brand-400`)
+reserved for emphasis — primary actions, active navigation, icons, rules and
+hover feedback. **Dark is the default theme.** A light theme is available from
+the header toggle and uses the darker end of the brand ramp (`brand-700`) so
+the green still passes AA on white. The choice is stored in `localStorage`
+under `windii-theme` and applied before first paint by an inline script, so
+there is no flash of the wrong theme.
+
+**Motion.** One scale, shared by everything: `--dur-fast` (150ms) for presses,
+`--dur-base` (220ms) for hover feedback, `--dur-slow` (380ms) for larger
+transitions, all on `--ease-out-soft`. Interaction states are pure CSS. Scroll
+entrances use `Reveal` / `RevealGroup` / `RevealItem` (`src/components/ui/Reveal.tsx`)
+— a 14px rise and a fade, once, with an optional 70ms stagger for grids. There
+is no scaling, rotation, parallax or spring anywhere, and every animation is
+skipped entirely under `prefers-reduced-motion`.
 
 ---
 

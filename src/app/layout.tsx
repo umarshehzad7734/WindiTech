@@ -61,11 +61,10 @@ export const metadata: Metadata = {
   },
 };
 
+// Dark is the site's default theme, so the browser chrome matches black.
 export const viewport: Viewport = {
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#060809" },
-  ],
+  themeColor: "#000000",
+  colorScheme: "dark light",
 };
 
 export default function RootLayout({

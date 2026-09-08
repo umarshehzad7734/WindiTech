@@ -1,14 +1,13 @@
 import Link from "next/link";
-import { ArrowRight, Mail, MapPin, Phone } from "lucide-react";
+import { ArrowRight, Check, Mail, MapPin, Phone } from "lucide-react";
 import { business, home, processSteps, products, services } from "@/content/site";
 import { Container } from "@/components/ui/Container";
 import { Section } from "@/components/ui/Section";
 import { ButtonLink } from "@/components/ui/Button";
-import { Card, CardBody, CardTitle } from "@/components/ui/Card";
+import { Card, CardBody, CardIcon, CardTitle } from "@/components/ui/Card";
 import { Eyebrow, SectionHeading } from "@/components/ui/SectionHeading";
-import { Reveal } from "@/components/ui/Reveal";
+import { Reveal, RevealGroup, RevealItem } from "@/components/ui/Reveal";
 import { ServiceIcon } from "@/components/ServiceIcon";
-import { LogoMark } from "@/components/Logo";
 
 export default function HomePage() {
   return (
@@ -32,39 +31,54 @@ function Hero() {
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute -top-40 left-1/2 h-[32rem] w-[52rem] -translate-x-1/2 rounded-full bg-brand-400/12 blur-[120px] dark:bg-brand-400/16"
+        className="pointer-events-none absolute -top-40 left-1/2 h-[32rem] w-[52rem] -translate-x-1/2 rounded-full bg-brand-400/[0.07] blur-[120px]"
       />
       <Container className="relative">
         <div className="py-20 sm:py-28 lg:py-36">
-          <div className="max-w-3xl">
-            <Eyebrow>{home.hero.eyebrow}</Eyebrow>
-            <h1 className="text-5xl text-fg">{home.hero.headline}</h1>
-            <p className="mt-6 max-w-2xl font-[family-name:var(--font-display)] text-2xl font-medium text-fg-muted">
-              {home.hero.positioning}
-            </p>
-            <p className="mt-6 max-w-2xl text-base leading-relaxed text-fg-muted sm:text-lg">
-              {home.hero.supporting}
-            </p>
+          {/* The hero is the one place with a sequenced entrance: each line
+              follows the one above by 80ms, which reads as a single settling
+              movement rather than separate animations. */}
+          <RevealGroup className="max-w-3xl" stagger={0.08}>
+            <RevealItem>
+              <Eyebrow>{home.hero.eyebrow}</Eyebrow>
+            </RevealItem>
+            <RevealItem>
+              <h1 className="text-5xl text-fg">{home.hero.headline}</h1>
+            </RevealItem>
+            <RevealItem>
+              <p className="mt-6 max-w-2xl font-[family-name:var(--font-display)] text-2xl font-medium text-fg-muted">
+                {home.hero.positioning}
+              </p>
+            </RevealItem>
+            <RevealItem>
+              <p className="mt-6 max-w-2xl text-base leading-relaxed text-fg-muted sm:text-lg">
+                {home.hero.supporting}
+              </p>
+            </RevealItem>
 
-            <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center">
-              <ButtonLink href={home.hero.primaryCta.href} size="lg">
-                {home.hero.primaryCta.label}
-                <ArrowRight className="h-4 w-4" aria-hidden="true" />
-              </ButtonLink>
-              <ButtonLink
-                href={home.hero.secondaryCta.href}
-                size="lg"
-                variant="secondary"
-              >
-                {home.hero.secondaryCta.label}
-              </ButtonLink>
-            </div>
+            <RevealItem>
+              <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center">
+                <ButtonLink href={home.hero.primaryCta.href} size="lg">
+                  {home.hero.primaryCta.label}
+                  <ArrowRight className="h-4 w-4 transition-transform duration-[--dur-base] ease-[--ease-out-soft] group-hover/btn:translate-x-0.5" aria-hidden="true" />
+                </ButtonLink>
+                <ButtonLink
+                  href={home.hero.secondaryCta.href}
+                  size="lg"
+                  variant="secondary"
+                >
+                  {home.hero.secondaryCta.label}
+                </ButtonLink>
+              </div>
+            </RevealItem>
 
-            <p className="mt-10 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-fg-subtle">
-              <MapPin className="h-4 w-4 text-accent" aria-hidden="true" />
-              <span>{business.address.full}</span>
-            </p>
-          </div>
+            <RevealItem>
+              <p className="mt-10 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-fg-subtle">
+                <MapPin className="h-4 w-4 text-accent" aria-hidden="true" />
+                <span>{business.address.full}</span>
+              </p>
+            </RevealItem>
+          </RevealGroup>
         </div>
       </Container>
     </section>
@@ -113,17 +127,17 @@ function ServicesOverview() {
         />
       </Reveal>
 
-      <ul className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {services.map((service, index) => (
-          <Reveal as="li" key={service.slug} delay={Math.min(index, 5) * 0.05}>
+      <RevealGroup as="ul" className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {services.map((service) => (
+          <RevealItem as="li" key={service.slug}>
             <Link
               href={`/services#${service.slug}`}
               className="group block h-full rounded-[var(--radius-card)]"
             >
               <Card interactive className="h-full">
-                <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-accent-soft text-accent">
+                <CardIcon>
                   <ServiceIcon name={service.icon} className="h-5 w-5" />
-                </span>
+                </CardIcon>
                 <CardTitle className="mt-5">{service.title}</CardTitle>
                 <CardBody className="mt-3">{service.summary}</CardBody>
                 <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-medium text-accent">
@@ -135,14 +149,14 @@ function ServicesOverview() {
                 </span>
               </Card>
             </Link>
-          </Reveal>
+          </RevealItem>
         ))}
-      </ul>
+      </RevealGroup>
 
       <Reveal className="mt-12">
         <ButtonLink href={home.services.cta.href} variant="secondary">
           {home.services.cta.label}
-          <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          <ArrowRight className="h-4 w-4 transition-transform duration-[--dur-base] ease-[--ease-out-soft] group-hover/btn:translate-x-0.5" aria-hidden="true" />
         </ButtonLink>
       </Reveal>
     </Section>
@@ -163,7 +177,7 @@ function ProductsTeaser() {
           <div className="mt-8">
             <ButtonLink href={home.products.cta.href}>
               {home.products.cta.label}
-              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              <ArrowRight className="h-4 w-4 transition-transform duration-[--dur-base] ease-[--ease-out-soft] group-hover/btn:translate-x-0.5" aria-hidden="true" />
             </ButtonLink>
           </div>
         </Reveal>
@@ -172,7 +186,7 @@ function ProductsTeaser() {
           <div className="relative overflow-hidden rounded-[var(--radius-card)] border border-line bg-canvas p-7 sm:p-9">
             <div
               aria-hidden
-              className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-brand-400/10 blur-3xl"
+              className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-brand-400/[0.08] blur-3xl"
             />
             <div className="relative">
               <span className="inline-flex items-center rounded-full border border-accent/30 bg-accent-soft px-3 py-1 text-xs font-semibold uppercase tracking-[0.12em] text-accent">
@@ -187,7 +201,10 @@ function ProductsTeaser() {
                     key={capability.title}
                     className="flex items-start gap-2.5 text-sm text-fg-muted"
                   >
-                    <LogoMark className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
+                    <Check
+                      className="mt-1 h-4 w-4 shrink-0 text-accent"
+                      aria-hidden="true"
+                    />
                     {capability.title}
                   </li>
                 ))}
@@ -212,9 +229,9 @@ function Process() {
         />
       </Reveal>
 
-      <ol className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-        {processSteps.map((step, index) => (
-          <Reveal as="li" key={step.step} delay={index * 0.08}>
+      <RevealGroup as="ol" className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        {processSteps.map((step) => (
+          <RevealItem as="li" key={step.step}>
             <Card className="h-full">
               <span
                 aria-hidden
@@ -225,9 +242,9 @@ function Process() {
               <CardTitle className="mt-4">{step.title}</CardTitle>
               <CardBody className="mt-3">{step.description}</CardBody>
             </Card>
-          </Reveal>
+          </RevealItem>
         ))}
-      </ol>
+      </RevealGroup>
     </Section>
   );
 }
@@ -269,7 +286,7 @@ function ContactStrip() {
               <div className="mt-8">
                 <ButtonLink href={home.contactStrip.cta.href} size="lg">
                   {home.contactStrip.cta.label}
-                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                  <ArrowRight className="h-4 w-4 transition-transform duration-[--dur-base] ease-[--ease-out-soft] group-hover/btn:translate-x-0.5" aria-hidden="true" />
                 </ButtonLink>
               </div>
             </div>
@@ -288,7 +305,7 @@ function ContactStrip() {
                     {item.href ? (
                       <a
                         href={item.href}
-                        className="mt-1 block break-all text-sm font-medium text-fg transition-colors hover:text-accent"
+                        className="mt-1 block break-all text-sm font-medium text-fg transition-colors duration-[--dur-base] hover:text-accent"
                       >
                         {item.value}
                       </a>

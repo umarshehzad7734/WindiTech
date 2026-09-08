@@ -51,7 +51,7 @@ export default function AboutPage() {
             <div className="mt-8">
               <ButtonLink href={about.whatWeDo.cta.href} variant="secondary">
                 {about.whatWeDo.cta.label}
-                <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                <ArrowRight className="h-4 w-4 transition-transform duration-[--dur-base] ease-[--ease-out-soft] group-hover/btn:translate-x-0.5" aria-hidden="true" />
               </ButtonLink>
             </div>
           </Reveal>

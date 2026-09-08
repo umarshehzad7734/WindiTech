@@ -19,7 +19,7 @@ export default function NotFound() {
         <div className="mt-10">
           <ButtonLink href={notFound.cta.href} size="lg">
             {notFound.cta.label}
-            <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            <ArrowRight className="h-4 w-4 transition-transform duration-[--dur-base] ease-[--ease-out-soft] group-hover/btn:translate-x-0.5" aria-hidden="true" />
           </ButtonLink>
         </div>
       </div>

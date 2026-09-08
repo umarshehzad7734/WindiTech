@@ -18,7 +18,7 @@ export function PageHeader({
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute -top-32 left-1/3 h-80 w-[40rem] -translate-x-1/2 rounded-full bg-brand-400/10 blur-[110px]"
+        className="pointer-events-none absolute -top-32 left-1/3 h-80 w-[40rem] -translate-x-1/2 rounded-full bg-brand-400/[0.06] blur-[110px]"
       />
       <Container className="relative">
         <div className="max-w-3xl py-16 sm:py-20 lg:py-24">

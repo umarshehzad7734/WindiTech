@@ -15,9 +15,23 @@ import { cn } from "@/lib/utils";
 export function Header() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const reduceMotion = useReducedMotion();
   const panelRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
+
+  // The header sits flush with the hero at the top of the page and gains a
+  // border, blur and shadow once the visitor scrolls. Passive listener, and the
+  // state only flips at the threshold rather than on every frame.
+  useEffect(() => {
+    const onScroll = () => {
+      const past = window.scrollY > 8;
+      setScrolled((current) => (current === past ? current : past));
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   // Lock scroll, trap focus and close on Escape while the drawer is open.
   useEffect(() => {
@@ -63,7 +77,15 @@ export function Header() {
   }
 
   return (
-    <header className="sticky top-0 z-50 border-b border-line bg-canvas/85 backdrop-blur-md">
+    <header
+      className={cn(
+        "sticky top-0 z-50 border-b transition-[background-color,border-color,box-shadow]",
+        "duration-[--dur-slow] ease-[--ease-out-soft]",
+        scrolled
+          ? "border-line bg-canvas/85 shadow-[0_1px_0_0_var(--color-line),0_8px_32px_-24px_rgba(0,0,0,0.8)] backdrop-blur-xl"
+          : "border-transparent bg-canvas/60 backdrop-blur-sm",
+      )}
+    >
       <Container>
         <div className="flex h-16 items-center justify-between gap-4 sm:h-18">
           <Link
@@ -81,11 +103,13 @@ export function Header() {
                   <Link
                     href={item.href}
                     aria-current={isActive(item.href) ? "page" : undefined}
+                    data-active={isActive(item.href)}
                     className={cn(
-                      "rounded-full px-4 py-2 text-sm font-medium transition-colors duration-200",
+                      "link-underline block px-3 py-2 text-sm font-medium",
+                      "transition-colors duration-[--dur-base] ease-[--ease-out-soft]",
                       isActive(item.href)
-                        ? "bg-accent-soft text-accent"
-                        : "text-fg-muted hover:bg-surface hover:text-fg",
+                        ? "text-accent"
+                        : "text-fg-muted hover:text-fg",
                     )}
                   >
                     {item.label}
@@ -111,7 +135,11 @@ export function Header() {
               aria-label="Open menu"
               aria-expanded={open}
               aria-controls="mobile-menu"
-              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-line text-fg-muted transition-colors duration-200 hover:border-accent hover:text-accent lg:hidden"
+              className={cn(
+                "inline-flex h-10 w-10 items-center justify-center rounded-full border border-line text-fg-muted lg:hidden",
+                "transition-[color,border-color,background-color] duration-[--dur-base] ease-[--ease-out-soft]",
+                "hover:border-accent/50 hover:bg-accent-soft hover:text-accent",
+              )}
             >
               <Menu className="h-5 w-5" aria-hidden="true" />
             </button>
@@ -156,7 +184,11 @@ export function Header() {
                     triggerRef.current?.focus();
                   }}
                   aria-label="Close menu"
-                  className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-line text-fg-muted transition-colors hover:border-accent hover:text-accent"
+                  className={cn(
+                    "inline-flex h-10 w-10 items-center justify-center rounded-full border border-line text-fg-muted",
+                    "transition-[color,border-color,background-color] duration-[--dur-base] ease-[--ease-out-soft]",
+                    "hover:border-accent/50 hover:bg-accent-soft hover:text-accent",
+                  )}
                 >
                   <X className="h-5 w-5" aria-hidden="true" />
                 </button>
@@ -171,10 +203,11 @@ export function Header() {
                         onClick={() => setOpen(false)}
                         aria-current={isActive(item.href) ? "page" : undefined}
                         className={cn(
-                          "block rounded-xl px-4 py-3 text-base font-medium transition-colors",
+                          "block rounded-xl px-4 py-3 text-base font-medium",
+                          "transition-[color,background-color,padding] duration-[--dur-base] ease-[--ease-out-soft]",
                           isActive(item.href)
                             ? "bg-accent-soft text-accent"
-                            : "text-fg-muted hover:bg-surface hover:text-fg",
+                            : "text-fg-muted hover:bg-surface hover:pl-5 hover:text-fg",
                         )}
                       >
                         {item.label}

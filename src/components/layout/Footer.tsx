@@ -36,7 +36,7 @@ export function Footer() {
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    className="text-fg-muted transition-colors hover:text-accent"
+                    className="link-underline inline-block text-fg-muted transition-colors duration-[--dur-base] hover:text-accent"
                   >
                     {item.label}
                   </Link>
@@ -46,7 +46,7 @@ export function Footer() {
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    className="text-fg-muted transition-colors hover:text-accent"
+                    className="link-underline inline-block text-fg-muted transition-colors duration-[--dur-base] hover:text-accent"
                   >
                     {item.label}
                   </Link>
@@ -67,7 +67,7 @@ export function Footer() {
                 <li key={service.slug}>
                   <Link
                     href={`/services#${service.slug}`}
-                    className="text-fg-muted transition-colors hover:text-accent"
+                    className="link-underline inline-block text-fg-muted transition-colors duration-[--dur-base] hover:text-accent"
                   >
                     {service.title}
                   </Link>
@@ -100,7 +100,7 @@ export function Footer() {
                 />
                 <a
                   href={`tel:${business.phoneHref}`}
-                  className="text-fg-muted transition-colors hover:text-accent"
+                  className="link-underline inline-block text-fg-muted transition-colors duration-[--dur-base] hover:text-accent"
                 >
                   {business.phone}
                 </a>
@@ -112,7 +112,7 @@ export function Footer() {
                 />
                 <a
                   href={`mailto:${business.email}`}
-                  className="break-all text-fg-muted transition-colors hover:text-accent"
+                  className="break-all text-fg-muted transition-colors duration-[--dur-base] hover:text-accent"
                 >
                   {business.email}
                 </a>

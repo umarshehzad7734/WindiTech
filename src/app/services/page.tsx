@@ -40,7 +40,11 @@ export default function ServicesPage() {
               <li key={service.slug}>
                 <a
                   href={`#${service.slug}`}
-                  className="inline-block rounded-full border border-line bg-canvas px-4 py-2 text-sm text-fg-muted transition-colors hover:border-accent hover:text-accent"
+                  className={[
+                    "inline-block rounded-full border border-line bg-canvas px-4 py-2 text-sm text-fg-muted",
+                    "transition-[color,border-color,background-color,transform] duration-[--dur-base] ease-[--ease-out-soft]",
+                    "hover:-translate-y-px hover:border-accent/60 hover:bg-accent-soft hover:text-accent",
+                  ].join(" ")}
                 >
                   {service.title}
                 </a>
@@ -63,7 +67,7 @@ export default function ServicesPage() {
                 className="grid scroll-mt-28 gap-8 lg:grid-cols-[1fr_1.15fr] lg:gap-16"
               >
                 <div>
-                  <span className="inline-flex h-12 w-12 items-center justify-center rounded-xl bg-accent-soft text-accent">
+                  <span className="inline-flex h-12 w-12 items-center justify-center rounded-xl border border-line bg-surface-raised text-accent">
                     <ServiceIcon name={service.icon} className="h-6 w-6" />
                   </span>
                   <h2 className="mt-5 text-2xl text-fg">{service.title}</h2>
@@ -107,7 +111,7 @@ export default function ServicesPage() {
           <div className="mt-8">
             <ButtonLink href="/contact" size="lg">
               Talk to us
-              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              <ArrowRight className="h-4 w-4 transition-transform duration-[--dur-base] ease-[--ease-out-soft] group-hover/btn:translate-x-0.5" aria-hidden="true" />
             </ButtonLink>
           </div>
         </Reveal>
