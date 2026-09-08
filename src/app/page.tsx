@@ -8,11 +8,17 @@ import { Card, CardBody, CardIcon, CardTitle } from "@/components/ui/Card";
 import { Eyebrow, SectionHeading } from "@/components/ui/SectionHeading";
 import { Reveal, RevealGroup, RevealItem } from "@/components/ui/Reveal";
 import { ServiceIcon } from "@/components/ServiceIcon";
+import { SplitText } from "@/components/motion/SplitText";
+import { Parallax, ScrollFade } from "@/components/motion/Parallax";
+import { Marquee } from "@/components/motion/Marquee";
+import { Spotlight } from "@/components/motion/Spotlight";
+import { Magnetic } from "@/components/motion/Magnetic";
 
 export default function HomePage() {
   return (
     <>
       <Hero />
+      <ServiceTicker />
       <WhoWeAre />
       <ServicesOverview />
       <ProductsTeaser />
@@ -25,26 +31,33 @@ export default function HomePage() {
 function Hero() {
   return (
     <section className="relative overflow-hidden border-b border-line">
-      <div
-        aria-hidden
-        className="bg-grid pointer-events-none absolute inset-0 [mask-image:radial-gradient(ellipse_75%_60%_at_50%_0%,black,transparent)]"
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -top-40 left-1/2 h-[32rem] w-[52rem] -translate-x-1/2 rounded-full bg-brand-400/[0.07] blur-[120px]"
-      />
+      <ScrollFade className="pointer-events-none absolute inset-0">
+        <Parallax speed={70} className="absolute inset-0">
+          <div
+            aria-hidden
+            className="bg-grid absolute inset-0 [mask-image:radial-gradient(ellipse_75%_60%_at_50%_0%,black,transparent)]"
+          />
+        </Parallax>
+        <Parallax speed={-40} className="absolute inset-0">
+          <div
+            aria-hidden
+            className="absolute -top-40 left-1/2 h-[32rem] w-[52rem] -translate-x-1/2 rounded-full bg-brand-400/[0.09] blur-[120px]"
+          />
+        </Parallax>
+      </ScrollFade>
       <Container className="relative">
         <div className="py-20 sm:py-28 lg:py-36">
           {/* The hero is the one place with a sequenced entrance: each line
               follows the one above by 80ms, which reads as a single settling
               movement rather than separate animations. */}
-          <RevealGroup className="max-w-3xl" stagger={0.08}>
-            <RevealItem>
-              <Eyebrow>{home.hero.eyebrow}</Eyebrow>
-            </RevealItem>
-            <RevealItem>
-              <h1 className="text-5xl text-fg">{home.hero.headline}</h1>
-            </RevealItem>
+          <div className="max-w-3xl">
+            <Eyebrow>{home.hero.eyebrow}</Eyebrow>
+            <h1 className="text-5xl text-fg">
+              <SplitText text={home.hero.headline} stagger={0.06} />
+            </h1>
+          </div>
+
+          <RevealGroup className="max-w-3xl" stagger={0.08} delay={0.35}>
             <RevealItem>
               <p className="mt-6 max-w-2xl font-[family-name:var(--font-display)] text-2xl font-medium text-fg-muted">
                 {home.hero.positioning}
@@ -58,10 +71,12 @@ function Hero() {
 
             <RevealItem>
               <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center">
-                <ButtonLink href={home.hero.primaryCta.href} size="lg">
-                  {home.hero.primaryCta.label}
-                  <ArrowRight className="h-4 w-4 transition-transform duration-[--dur-base] ease-[--ease-out-soft] group-hover/btn:translate-x-0.5" aria-hidden="true" />
-                </ButtonLink>
+                <Magnetic>
+                  <ButtonLink href={home.hero.primaryCta.href} size="lg">
+                    {home.hero.primaryCta.label}
+                    <ArrowRight className="h-4 w-4 transition-transform duration-[--dur-base] ease-[--ease-out-soft] group-hover/btn:translate-x-0.5" aria-hidden="true" />
+                  </ButtonLink>
+                </Magnetic>
                 <ButtonLink
                   href={home.hero.secondaryCta.href}
                   size="lg"
@@ -82,6 +97,19 @@ function Hero() {
         </div>
       </Container>
     </section>
+  );
+}
+
+/**
+ * A continuously scrolling band of the service lines, sitting directly under
+ * the hero. It gives the page a pulse before the visitor scrolls, and reads as
+ * a capability list rather than decoration.
+ */
+function ServiceTicker() {
+  return (
+    <div className="border-b border-line bg-surface py-5">
+      <Marquee items={services.map((service) => service.title)} />
+    </div>
   );
 }
 
@@ -134,6 +162,7 @@ function ServicesOverview() {
               href={`/services#${service.slug}`}
               className="group block h-full rounded-[var(--radius-card)]"
             >
+              <Spotlight className="h-full rounded-[var(--radius-card)]">
               <Card interactive className="h-full">
                 <CardIcon>
                   <ServiceIcon name={service.icon} className="h-5 w-5" />
@@ -148,6 +177,7 @@ function ServicesOverview() {
                   />
                 </span>
               </Card>
+              </Spotlight>
             </Link>
           </RevealItem>
         ))}

@@ -4,6 +4,7 @@ import { business, seo } from "@/content/site";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { ThemeScript } from "@/components/layout/ThemeScript";
+import { ScrollProgress } from "@/components/motion/ScrollProgress";
 import { JsonLd } from "@/components/JsonLd";
 import { organizationSchema, websiteSchema } from "@/lib/schema";
 import "./globals.css";
@@ -93,6 +94,7 @@ export default function RootLayout({
         >
           Skip to main content
         </a>
+        <ScrollProgress />
         <Header />
         <main id="main" className="flex-1">
           {children}

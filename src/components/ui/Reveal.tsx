@@ -39,22 +39,24 @@ export function Reveal({
   const reduceMotion = useReducedMotion();
   const MotionTag = motion[as];
 
-  if (reduceMotion) {
-    const Tag = as;
-    return <Tag className={className}>{children}</Tag>;
-  }
-
   return (
     <MotionTag
       // Marks the element for the no-JS stylesheet in the root layout, which
       // forces it visible when the animation can never run.
       data-reveal=""
       className={cn(className)}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, margin: "-80px" }}
-      variants={variants}
-      transition={{ duration: DURATION, delay, ease: EASE }}
+      // Structure never branches on motion preference — the server cannot know
+      // it, and differing markup breaks hydration. Only the movement is
+      // disabled.
+      {...(reduceMotion
+        ? { initial: false as const }
+        : {
+            initial: "hidden",
+            whileInView: "visible",
+            viewport: { once: true, margin: "-80px" },
+            variants,
+            transition: { duration: DURATION, delay, ease: EASE },
+          })}
     >
       {children}
     </MotionTag>
@@ -76,18 +78,17 @@ export function RevealGroup({
   const reduceMotion = useReducedMotion();
   const MotionTag = motion[as];
 
-  if (reduceMotion) {
-    const Tag = as;
-    return <Tag className={className}>{children}</Tag>;
-  }
-
   return (
     <MotionTag
       className={cn(className)}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, margin: "-60px" }}
-      transition={{ staggerChildren: stagger, delayChildren: delay }}
+      {...(reduceMotion
+        ? { initial: false as const }
+        : {
+            initial: "hidden",
+            whileInView: "visible",
+            viewport: { once: true, margin: "-60px" },
+            transition: { staggerChildren: stagger, delayChildren: delay },
+          })}
     >
       {children}
     </MotionTag>
@@ -103,16 +104,11 @@ export function RevealItem({
   const reduceMotion = useReducedMotion();
   const MotionTag = motion[as];
 
-  if (reduceMotion) {
-    const Tag = as;
-    return <Tag className={className}>{children}</Tag>;
-  }
-
   return (
     <MotionTag
       data-reveal=""
       className={cn(className)}
-      variants={variants}
+      variants={reduceMotion ? undefined : variants}
       transition={{ duration: DURATION, ease: EASE }}
     >
       {children}

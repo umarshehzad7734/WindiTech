@@ -1,3 +1,4 @@
+import { SplitText } from "@/components/motion/SplitText";
 import { Container } from "./Container";
 import { Eyebrow } from "./SectionHeading";
 
@@ -23,7 +24,9 @@ export function PageHeader({
       <Container className="relative">
         <div className="max-w-3xl py-16 sm:py-20 lg:py-24">
           <Eyebrow>{eyebrow}</Eyebrow>
-          <h1 className="text-4xl text-fg">{title}</h1>
+          <h1 className="text-4xl text-fg">
+            <SplitText text={title} />
+          </h1>
           {lead ? (
             <p className="mt-6 text-base leading-relaxed text-fg-muted sm:text-lg">
               {lead}

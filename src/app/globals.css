@@ -246,6 +246,55 @@
   opacity: 1;
 }
 
+/* Continuous ticker. The track is duplicated, so -50% is exactly one loop.
+   Runs on the compositor; Marquee pauses it on hover. */
+@keyframes marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.animate-marquee {
+  animation: marquee linear infinite;
+  will-change: transform;
+}
+
+/* Cursor-tracked wash, positioned by --spot-x / --spot-y from Spotlight.
+   It sits ABOVE the card — the card's own background is opaque, so a layer
+   behind it would never be seen — and is kept faint and non-interactive so it
+   reads as a sheen without touching legibility. Coarse pointers have no hover,
+   so it stays off there. */
+.spotlight::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: inherit;
+  opacity: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    18rem circle at var(--spot-x, 50%) var(--spot-y, 50%),
+    color-mix(in oklab, var(--color-accent) 10%, transparent),
+    transparent 68%
+  );
+  transition: opacity var(--dur-slow) var(--ease-out-soft);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .spotlight:hover::after,
+  .spotlight:focus-within::after {
+    opacity: 1;
+  }
+}
+
+.spotlight > * {
+  position: relative;
+  z-index: 1;
+}
+
 /* Decorative hero grid — kept in CSS so it costs no client JS. */
 .bg-grid {
   background-image: linear-gradient(

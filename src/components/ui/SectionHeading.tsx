@@ -1,3 +1,4 @@
+import { SplitText } from "@/components/motion/SplitText";
 import { cn } from "@/lib/utils";
 
 export function Eyebrow({
@@ -54,7 +55,7 @@ export function SectionHeading({
         id={id}
         className={cn(Tag === "h1" ? "text-4xl" : "text-3xl", "text-fg")}
       >
-        {title}
+        <SplitText text={title} />
       </Tag>
       {intro ? (
         <p className="mt-5 text-base leading-relaxed text-fg-muted sm:text-lg">
